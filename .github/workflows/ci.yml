@@ -42,6 +42,12 @@ jobs:
           mkdir -p target/release
           tar --exclude=".git*" --exclude=target --exclude=deno_typescript/typescript/tests --exclude=third_party/cpplint --exclude=third_party/node_modules --exclude=third_party/python_packages --exclude=third_party/prebuilt -czvf target/release/deno_src.tar.gz -C .. deno
 
+      - name: Set Rust install directory
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          echo ::set-env name=CARGO_HOME::d:\cargo
+          echo ::set-env name=RUSTUP_HOME::d:\rustup
+
       - name: Install rust
         uses: hecrj/setup-rust-action@v1
         with:
@@ -94,7 +100,7 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         run: |
           echo ::add-path::$(pwd)\third_party\prebuilt\win
-          echo ::add-path::$(pwd)\target\release
+          echo ::add-path::$(pwd)\target\release`
 
       - name: Log versions
         run: |
